@@ -10,6 +10,7 @@ import 'package:whatsapp_ui/features/status/screens/confirm_status_screen.dart';
 import 'package:whatsapp_ui/features/status/screens/status_contact_screen.dart';
 
 import '../features/auth/controller/auth_controller.dart';
+import '../features/group/screens/create_group_screen.dart';
 
 class MobileLayoutScreen extends ConsumerStatefulWidget {
   const MobileLayoutScreen({Key? key}) : super(key: key);
@@ -71,9 +72,22 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
               icon: const Icon(Icons.search, color: Colors.grey),
               onPressed: () {},
             ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.grey),
-              onPressed: () {},
+            PopupMenuButton(
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.grey,
+              ),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text(
+                    'Create Group',
+                  ),
+                  onTap: () => Future(
+                    () => Navigator.pushNamed(
+                        context, CreateGroupScreen.routeName),
+                  ),
+                )
+              ],
             ),
           ],
           bottom: TabBar(
@@ -100,7 +114,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
         ),
         body: TabBarView(controller: tabBarController, children: const [
           ContactsList(),
-          StatusConatctsScreen(),
+          StatusContactsScreen(),
           Text("calls"),
         ]),
         floatingActionButton: FloatingActionButton(
