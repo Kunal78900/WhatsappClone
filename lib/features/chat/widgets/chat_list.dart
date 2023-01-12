@@ -1,5 +1,7 @@
 // ignore_for_file: unrelated_type_equality_checks
 
+import 'dart:isolate';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -15,8 +17,12 @@ import 'package:whatsapp_ui/features/chat/widgets/sender_message_card.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   final String recieverUserId;
+              
+  final bool isGroupChat;
+  
+              
 
-  const ChatList({Key? key, required this.recieverUserId}) : super(key: key);
+  const ChatList({Key? key,required this.isGroupChat , required this.recieverUserId}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ChatListState();
@@ -44,8 +50,8 @@ class _ChatListState extends ConsumerState<ChatList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-        stream:
-            ref.read(chatControllerProvider).chatStream(widget.recieverUserId),
+         stream : widget.isGroupChat ?   ref.read(chatControllerProvider).groupchatStream(widget.recieverUserId)
+          :  ref.read(chatControllerProvider).chatStream(widget.recieverUserId),
         builder: (context, snapshot) {
           if (ConnectionState == ConnectionState.waiting) {
             return const Loader();

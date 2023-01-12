@@ -8,6 +8,7 @@ import 'package:whatsapp_ui/features/auth/controller/auth_controller.dart';
 import 'package:whatsapp_ui/models/message.dart';
 
 import '../../../models/chat_contact.dart';
+import '../../../models/group.dart';
 import '../repositotries/chat_repository.dart';
 
 final chatControllerProvider = Provider((ref) {
@@ -31,14 +32,23 @@ class ChatController {
     return chatRepository.getChatContacts();
   }
 
+  Stream<List<Group>> chatGroups() {
+    return chatRepository.getChatGroups();
+  }
+
   Stream<List<Message>> chatStream(String recieverUserId) {
     return chatRepository.getChatStream(recieverUserId);
+  }
+
+  Stream<List<Message>> groupchatStream(String groupId) {
+    return chatRepository.getGroupChatStream(groupId);
   }
 
   void sendTextMessage(
     BuildContext context,
     String text,
     String recieverUserId,
+    bool isGroupChat,
   ) {
     final messageReply = ref.read(MessageReplyProvider);
     ref
@@ -46,9 +56,11 @@ class ChatController {
         .whenData((value) => chatRepository.sendTextMessage(
               context: context,
               text: text,
-              recieverUserID: recieverUserId,
+              // recieverUserID: recieverUserId,
               senderUser: value!,
               messageReply: messageReply,
+              isGroupChat: isGroupChat,
+              recieverUserId: 'recieverUserId',
             ));
     ref.read(MessageReplyProvider.state).update((state) => null);
   }
@@ -58,6 +70,7 @@ class ChatController {
     File file,
     String recieverUserId,
     MessageEnum messageEnum,
+    bool isGroupChat,
   ) {
     final messageReply = ref.read(MessageReplyProvider);
     ref
@@ -70,9 +83,9 @@ class ChatController {
               messageEnum: messageEnum,
               ref: ref,
               messageReply: messageReply,
+              isGroupChat: isGroupChat,
             ));
     ref.read(MessageReplyProvider.state).update((state) => null);
-
   }
 //   void sendGIFMessage(
 //     BuildContext context,
@@ -99,12 +112,11 @@ class ChatController {
 //   }
   // ref.read(messageReplyProvider.state).update((state) => null);
 
-
   void setChatMessageSeen(
     BuildContext context,
     String recieverUserId,
     String messageId,
-  ){
+  ) {
     chatRepository.setChatMessageSeen(
       context,
       recieverUserId,
