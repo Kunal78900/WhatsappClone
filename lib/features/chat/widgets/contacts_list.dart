@@ -108,6 +108,7 @@ class ContactsList extends ConsumerWidget {
                                   'name': chatContactsData.name,
                                   'uid': chatContactsData.contactId,
                                   'isGroupChat' : false,
+                                  'profilePic':chatContactsData.profilePic,
 
                                 },
                               );
